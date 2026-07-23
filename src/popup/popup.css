@@ -1,0 +1,251 @@
+html, body { width: 380px; min-height: 540px; }
+
+/* On touch devices (phones/tablets), browsers that support extensions
+   (e.g. Kiwi Browser on Android) render this popup as a full page/sheet
+   rather than a small anchored dropdown. A fixed 380px there either
+   gets stretched by the browser's own scaling or leaves the layout too
+   cramped for the real screen width, so let it flow with the viewport
+   instead. Desktop's native anchored popup keeps the fixed px width
+   above, since Chrome's popup auto-sizer needs an explicit px value. */
+@media (pointer: coarse) {
+  html, body { width: 100%; max-width: 480px; min-width: 0; }
+}
+
+.popup {
+  position: relative;
+  padding: 18px 18px 16px;
+  color: var(--text-1);
+  overflow: hidden;
+}
+.popup .brand {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.popup .brand-mark {
+  display: flex; align-items: center; gap: 10px;
+}
+.popup .brand-mark .logo {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand), #ffb488 60%, var(--accent));
+  display: grid; place-items: center; color: #fff;
+  box-shadow: var(--shadow-1);
+}
+.popup .brand-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.popup .brand-sub { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
+.popup .brand-actions { display: flex; gap: 4px; }
+
+.tab-card {
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-2);
+  border: 1px solid var(--border-1);
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.tab-card .favicon {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--bg-3);
+  display: grid; place-items: center;
+  overflow: hidden;
+  color: var(--text-3);
+}
+.tab-card .favicon img { width: 20px; height: 20px; }
+.tab-card .title { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab-card .url { font-size: 11px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tab-card .state {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 8px; border-radius: var(--radius-full);
+  background: var(--bg-3); color: var(--text-2);
+}
+.tab-card .state.rec { color: #fff; background: var(--brand); }
+.tab-card .state.paused { color: var(--warn); background: color-mix(in oklab, var(--warn) 15%, transparent); }
+.tab-card .state.err { color: var(--danger); background: color-mix(in oklab, var(--danger) 15%, transparent); }
+
+.rec-stage {
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  background:
+    radial-gradient(200px 100px at 30% 0%, var(--brand-soft), transparent 60%),
+    var(--surface-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-1);
+  box-shadow: var(--shadow-1);
+  margin-bottom: 14px;
+}
+.rec-stage .timer {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1;
+  color: var(--text-1);
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.rec-stage .timer .ms { font-size: 20px; color: var(--text-3); }
+.rec-stage .caption {
+  text-align: center;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+.rec-stage .meter-wrap {
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: var(--bg-2);
+  border: 1px solid var(--border-1);
+  margin-bottom: 14px;
+}
+.rec-stage .controls {
+  display: flex; gap: 8px; justify-content: center;
+}
+.main-btn {
+  width: 88px; height: 88px; border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: grid; place-items: center;
+  box-shadow: 0 12px 30px color-mix(in oklab, var(--brand) 35%, transparent);
+  transition: transform var(--dur-med) var(--ease), background-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-med) var(--ease);
+  position: relative;
+}
+.main-btn:hover { transform: scale(1.04); background: var(--brand-strong); }
+.main-btn.recording { background: var(--danger); box-shadow: 0 12px 30px color-mix(in oklab, var(--danger) 40%, transparent); }
+.main-btn.paused { background: var(--warn); }
+.main-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+.main-btn .ring {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid color-mix(in oklab, var(--brand) 40%, transparent);
+  opacity: 0; animation: ring 1.8s ease-out infinite;
+}
+.main-btn.recording .ring { opacity: 1; border-color: color-mix(in oklab, var(--danger) 40%, transparent); }
+@keyframes ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.main-btn-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 10px; }
+.side-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--bg-2);
+  border: 1px solid var(--border-1);
+  color: var(--text-1);
+  display: grid; place-items: center; cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.side-btn:hover { background: var(--bg-3); transform: translateY(-1px); }
+.side-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.hint {
+  font-size: 11px; color: var(--text-3); text-align: center;
+  padding: 6px 12px; border-radius: var(--radius-full);
+  background: var(--bg-2); border: 1px solid var(--border-1);
+  display: inline-block; margin: 0 auto;
+}
+.hint-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+
+.section-title {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-3); margin: 4px 4px 8px;
+}
+.section-title button { background: none; border: none; color: var(--brand); cursor: pointer; font-size: 11px; text-transform: none; letter-spacing: 0; font-weight: 500; }
+
+.recent {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.recent-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: var(--bg-2);
+  border: 1px solid var(--border-1);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.recent-row:hover { background: var(--bg-3); }
+.recent-row .glyph {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--brand-soft); color: var(--brand);
+  display: grid; place-items: center;
+}
+.recent-row .name { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-row .meta { font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.recent-row .actions { display: flex; gap: 4px; }
+.recent-empty {
+  padding: 24px 16px; text-align: center; border-radius: var(--radius-md);
+  background: var(--bg-2); border: 1px dashed var(--border-2);
+  color: var(--text-3); font-size: 12px;
+}
+
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 8px; border-top: 1px solid var(--border-1);
+  color: var(--text-3); font-size: 11px;
+}
+.footer .usage { font-variant-numeric: tabular-nums; }
+.footer a { color: var(--text-2); text-decoration: none; }
+.footer a:hover { color: var(--brand); }
+
+.acp-btn.icon.ghost.active {
+  --btn-bg: var(--brand-soft);
+  color: var(--brand);
+}
+
+/* Floating Document PiP recording indicator */
+.pip-widget {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  height: 100%;
+  font-family: var(--font-sans);
+  color: var(--text-1);
+  background: var(--bg-1);
+}
+.pip-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--text-3);
+  flex-shrink: 0;
+}
+.pip-dot.live { background: var(--danger); animation: acp-pulse 1.6s var(--ease) infinite; }
+.pip-dot.paused { background: var(--warn); }
+.pip-info { min-width: 0; }
+.pip-timer {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.pip-label {
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-3);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pip-meter { margin-top: 4px; width: 100%; max-width: 160px; }
+.pip-actions { display: flex; gap: 2px; }
+
+.error-banner {
+  background: color-mix(in oklab, var(--danger) 12%, transparent);
+  color: var(--danger);
+  border: 1px solid color-mix(in oklab, var(--danger) 40%, transparent);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  font-size: 12px;
+  display: flex; gap: 8px; align-items: flex-start;
+  margin-bottom: 10px;
+}
