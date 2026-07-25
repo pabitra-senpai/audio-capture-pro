@@ -30,7 +30,7 @@ A premium Chrome extension for capturing the current tab's audio, built with **M
 - [FAQ](#faq)
 - [Contributing](#contributing)
 - [Roadmap](#roadmap)
-- [Security](#security)
+- [Reporting a security issue](#reporting-a-security-issue)
 - [Code of conduct](#code-of-conduct)
 - [License](#license)
 
@@ -70,18 +70,18 @@ _Screenshots coming soon — contributions welcome!_
 ```
 src/
 ├── background/          MV3 service worker: state machine, commands, notifications
-├── offscreen/           Offscreen document: MediaRecorder, level metering, WAV export
-├── popup/               React popup UI
-├── options/              React settings page
-├── history/              React recording manager page
-├── components/           Reusable UI (icons, level meter)
-├── hooks/                React hooks (theme, live status)
-├── services/             Cross-context helpers (messaging, notify, wav encoder)
-├── storage/               IndexedDB (recordings) + chrome.storage.local (prefs)
-├── styles/                Global CSS with theme tokens
-├── types/                 Shared TypeScript types
-├── utils/                 Formatting, filename builder, constants
-└── manifest.ts            @crxjs manifest source
+├── offscreen/            Offscreen document: MediaRecorder, level metering, WAV export
+├── popup/                 React popup UI
+├── options/                React settings page
+├── history/                React recording manager page
+├── components/             Reusable UI (icons, level meter)
+├── hooks/                   React hooks (theme, live status)
+├── services/                 Cross-context helpers (messaging, notify, wav encoder)
+├── storage/                   IndexedDB (recordings) + chrome.storage.local (prefs)
+├── styles/                     Global CSS with theme tokens
+├── types/                       Shared TypeScript types
+├── utils/                        Formatting, filename builder, constants
+└── manifest.ts                   @crxjs manifest source
 ```
 
 State flow:
@@ -112,8 +112,6 @@ npm run dev    # builds to dist/ in watch mode using @crxjs/vite-plugin
 ```
 
 Reload the extension in `chrome://extensions` whenever the service worker or manifest changes.
-
-Useful scripts:
 
 | Script                 | Purpose                                             |
 | ---------------------- | ---------------------------------------------------- |
@@ -170,7 +168,7 @@ Remap them at `chrome://extensions/shortcuts`.
 - **WAV export failed** — memory-heavy for very long recordings. Try WebM, or shorter clips at a lower sample rate.
 - **Recording stopped unexpectedly** — closing or navigating away from the recorded tab ends the stream; the partial audio is saved automatically.
 - **Notifications not visible** — enable notifications for Chrome in your OS settings.
-- **Choppy/stuttering audio, especially on Android browsers or heavy tabs (e.g. YouTube)** — this is usually CPU contention between video decode, the live "Keep tab audible" monitor path, and the recorder, not a fixed bug. Try disabling "Keep tab audible" or using a lower quality preset on constrained devices. See open issues for platform-specific reports.
+- **Choppy/stuttering audio, especially on Android browsers or heavy tabs (e.g. YouTube)** — usually CPU contention between video decode, the live "Keep tab audible" monitor path, and the recorder, not a fixed bug. Try disabling "Keep tab audible" or using a lower quality preset on constrained devices.
 
 ## FAQ
 
@@ -186,21 +184,22 @@ Remap them at `chrome://extensions/shortcuts`.
 
 ## Contributing
 
-Contributions are very welcome — bug fixes, new features, docs, and translations all help.
+Contributions are welcome — bug fixes, features, docs, and translations all help.
 
-1. Fork the repo and create your branch from `main`.
-2. Run `npm install` and `npm run dev` to get set up.
-3. Make your change. Run `npm run typecheck` before opening a PR — the build must be type-clean.
-4. Keep PRs focused; unrelated formatting-only changes make review harder.
-5. Open a pull request describing **what** changed and **why**.
+1. Fork the repo and branch from `main`.
+2. `npm install`, then `npm run dev` to get set up.
+3. Before opening a PR: run `npm run typecheck` (must pass), run `npm run build` (must succeed), and manually test the flow you touched by loading the unpacked extension.
+4. Make sure `git status` is clean of stray build artifacts (no `*.js` next to `*.ts` files, no `dist/`/`release/`).
+5. Open a PR describing **what** changed and **why**, linking any related issue.
+6. For larger features, open an issue first to discuss direction before writing a big PR.
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full guidelines, and [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community expectations.
+Use conventional, short commit messages where possible, e.g. `fix: ...`, `feat: ...`, `docs: ...`, `chore: ...`.
 
-There's no automated test suite yet — adding one (e.g. Vitest for `utils/`/`storage/` and Playwright for extension smoke tests) is a great first contribution. See the [Roadmap](#roadmap).
+There's no automated test suite or linter configured yet — matching the existing code style is enough for now; setting up Vitest/ESLint is itself a welcome contribution (see Roadmap).
 
 ## Roadmap
 
-Rough, unordered list of ideas — not commitments. Open an issue to discuss before starting large ones:
+Rough, unordered ideas — not commitments. Open an issue to discuss before starting large ones:
 
 - [ ] Automated test suite (unit + extension smoke tests)
 - [ ] ESLint/Prettier setup with a CI check on pull requests
@@ -210,13 +209,15 @@ Rough, unordered list of ideas — not commitments. Open an issue to discuss bef
 - [ ] Firefox/Edge compatibility pass
 - [ ] Real screenshots/demo GIF in this README
 
-## Security
+## Reporting a security issue
 
-Please **do not** open a public issue for security vulnerabilities. See [`SECURITY.md`](SECURITY.md) for how to report one privately.
+Please **do not** open a public issue for security vulnerabilities. Instead, use GitHub's **Security → Report a vulnerability** on this repo, or open an issue titled only "Security contact needed" (no details) and the maintainer will follow up privately.
+
+Include a description of the issue, steps to reproduce or a proof of concept, and your browser/OS/version. This extension stores everything locally (IndexedDB / `chrome.storage.local`) with no backend server and no `<all_urls>` permission, so reports are most likely to concern the offscreen document, message-passing between contexts, or the release pipeline (`.github/workflows`).
 
 ## Code of conduct
 
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you're expected to uphold it.
+Be respectful, keep discussion constructive, and don't harass or personally attack others in issues, PRs, or discussions. Maintainers may remove comments or block participants who don't follow this. This project follows the spirit of the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).
 
 ## License
 
