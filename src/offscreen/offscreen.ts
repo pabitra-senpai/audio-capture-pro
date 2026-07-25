@@ -65,7 +65,14 @@ async function startCapture(msg: Extract<OffscreenMessage, { type: 'OFFSCREEN_ST
       video: false,
     });
     const AC = window.AudioContext;
-    const audioCtx = new AC({ sampleRate: preset.sampleRate });
+    // IMPORTANT: never force a custom sampleRate on the *live* capture context.
+    // Chrome's tab audio pipeline always delivers 48kHz; requesting a
+    // different rate here forces the browser to resample in real time,
+    // which is CPU-heavy and causes audible stutter/glitches on slower
+    // devices. The chosen quality's sampleRate is only applied later,
+    // offline, when exporting to WAV (see finalize() below) — that path
+    // is not time-constrained so it never glitches.
+    const audioCtx = new AC();
     const source = audioCtx.createMediaStreamSource(stream);
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = 1024;
@@ -185,16 +192,22 @@ async function finalize(): Promise<void> {
   const durationMs = s.paused ? s.accumulatedMs : s.accumulatedMs + (Date.now() - s.startedAt);
   const raw = new Blob(s.chunks, { type: s.mimeType });
   const preset = QUALITY_PRESETS[s.settings.quality];
+  // The live capture ran at the device's native rate (audioCtx.sampleRate),
+  // not necessarily the preset's nominal rate — use the real one for
+  // accurate metadata on WebM output.
+  const capturedSampleRate = s.audioCtx.sampleRate;
 
   let finalBlob: Blob = raw;
   let outMime = s.mimeType;
   let outFormat: 'webm' | 'wav' = 'webm';
+  let outSampleRate = capturedSampleRate;
   if (s.settings.format === 'wav') {
     try {
       const { channels, sampleRate } = await decodeToChannels(raw, preset.sampleRate);
       finalBlob = encodeWav(channels, sampleRate);
       outMime = 'audio/wav';
       outFormat = 'wav';
+      outSampleRate = sampleRate;
     } catch (err) {
       post({
         type: 'OFFSCREEN_ERROR',
@@ -213,7 +226,7 @@ async function finalize(): Promise<void> {
     sizeBytes: finalBlob.size,
     format: outFormat,
     mimeType: outMime,
-    sampleRate: preset.sampleRate,
+    sampleRate: outSampleRate,
     bitRate: preset.bitRate,
     tabTitle: s.tab.title,
     tabUrl: s.tab.url,
