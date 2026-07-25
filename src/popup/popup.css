@@ -102,7 +102,7 @@ html, body { width: 380px; min-height: 540px; }
   border-radius: var(--radius-md);
   background: var(--bg-2);
   border: 1px solid var(--border-1);
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 .rec-stage .controls {
   display: flex; gap: 8px; justify-content: center;
@@ -124,16 +124,16 @@ html, body { width: 380px; min-height: 540px; }
 .main-btn.paused { background: var(--warn); }
 .main-btn.disabled { opacity: 0.5; cursor: not-allowed; }
 .main-btn .ring {
-  position: absolute; inset: -6px; border-radius: 50%;
+  position: absolute; inset: -4px; border-radius: 50%;
   border: 2px solid color-mix(in oklab, var(--brand) 40%, transparent);
   opacity: 0; animation: ring 1.8s ease-out infinite;
 }
 .main-btn.recording .ring { opacity: 1; border-color: color-mix(in oklab, var(--danger) 40%, transparent); }
 @keyframes ring {
   0% { transform: scale(0.9); opacity: 0.7; }
-  100% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.2); opacity: 0; }
 }
-.main-btn-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 10px; }
+.main-btn-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 20px; }
 .side-btn {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--bg-2);
@@ -248,4 +248,4 @@ html, body { width: 380px; min-height: 540px; }
   font-size: 12px;
   display: flex; gap: 8px; align-items: flex-start;
   margin-bottom: 10px;
-}
+ }
