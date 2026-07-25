@@ -14,6 +14,7 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "noEmit": true,
     "types": ["chrome", "vite/client", "node"],
     "baseUrl": ".",
     "paths": {
