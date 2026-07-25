@@ -54,11 +54,11 @@ A premium Chrome extension for capturing the current tab's audio, built with **M
 
 | Popup — idle | Popup — recording |
 |---|---|
-| ![Popup idle](docs/screenshots/popup-idle.png) | ![Popup recording](docs/screenshots/popup-recording.png) |
+| ![Popup idle](docs/screenshots/popup-recording.png) | ![Popup recording](docs/screenshots/history.png) |
 
-| Recording history | Settings |
+| Trimming — Save trimmed clip | Settings |
 |---|---|
-| ![History](docs/screenshots/history.png) | ![Settings](docs/screenshots/settings.png) |
+| ![History](docs/screenshots/Trim.png) | ![Settings](docs/screenshots/settings.png) |
 
 ## Architecture
 
