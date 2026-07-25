@@ -56,11 +56,9 @@ A premium Chrome extension for capturing the current tab's audio, built with **M
 |---|---|
 | ![Popup idle](docs/screenshots/popup-idle.png) | ![Popup recording](docs/screenshots/popup-recording.png) |
 
-<!--
-  History and Settings screenshots still needed — drop them under
-  `docs/screenshots/` (e.g. history.png, settings.png) and add a row/table
-  for them here the same way as above. Contributions welcome!
--->
+| Recording history | Settings |
+|---|---|
+| ![History](docs/screenshots/history.png) | ![Settings](docs/screenshots/settings.png) |
 
 ## Architecture
 
